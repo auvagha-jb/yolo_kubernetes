@@ -57,7 +57,7 @@
   - name: "Run client"
     docker_container:
       name: client
-      image: "{{ client_image_name }}"
+      image: "{{ client_image }}"
       state: started
       command: npm start
       ports: 
