@@ -1,23 +1,37 @@
-### Git Work Flow
-- The git commits were centered around the tasks that needed to be carried out
-- To ensure easy tracking of the changes made, the commits were made small and descriptive  
+# Yolo with Ansible
 
-### Image Selection
-- There were two base images to be selected:
-- The frontend and backend apps extended the node base image. For lighter images, the alpine variant was selected
-- For the database, the mongo image was selected since the app connected to a mongo database
+This project contains: 
+- A Vagrantfile for setting up and configuring the virtual machines 
+- An Ansible playbook for setting up and configuring the application in the VMs
 
-### Image Versioning
-- Images were named accoring to the semver convention: <DOCKER-HUB-USERNAME>/<IMAGE-NAME> i.e. [jerryauvagha/yolo_client](https://hub.docker.com/repository/docker/jerryauvagha/yolo_client) and [jerryauvagha/yolo_backend](https://hub.docker.com/repository/docker/jerryauvagha/yolo_backend)
-- The yolo_client and yolo_backend images were user-created and since this was their first version, the version number assigned was 1.0
-- The mongo image that was pulled directly from docker hub also 
-used the same naming convention [jerryauvagha/mongo](https://hub.docker.com/repository/docker/jerryauvagha/mongo) but the version matched the one of the base image so it was version 6.0.3
+## Prerequisites
 
-### Image Deployment
-- To push to docker hub, login is required via `sudo docker login` 
-- To push the image, the tag needs to be specified correctly
+- [Vagrant](https://developer.hashicorp.com/vagrant/docs/installation) 
+- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
 
-### Service Orchestration
-- To ensure the services were able to communicate with each other, they were put in the same named bridge network. In this case: yolo_network
-- To ensure data persistence the yolo_volume was assigned to the mongo service 
-- To ensure services ran in the correct order the service dependencies were specified in the docker compose. i.e. backend depends on mongo and client depends on backend    
+## Description
+
+### Vagrantfile
+- Sets up the `geerlingguy/ubuntu2004` virtual machines. 
+- Sets the IP and host names.
+- Forwards the ports 8000 and 3000 from the VMs to the host so that the client can communicate with the backend from our browser on localhost port 3000
+
+### Ansible playbook
+
+- Roles
+
+  - docker-role   =>  Installs docker, creates a custom network and a volume for data persistence.
+                      This spins up the docker, and the database using the `mongo:latest` image.
+  
+  - backend-role  =>  Building the backend container.
+                      This spins up the backend using the backend image to setup and run the backend container. 
+  
+  - client-role   =>  Builds the client container.
+                      This spins up the client using the client image to setup and run the client container.
+
+## Running the application
+
+In the root folder of the project:  
+Execute `vagrant up` to setup the VMs and provision ansible configuration using `playbook.yml`.
+
+View the application on your browser running on localhost port 3000
