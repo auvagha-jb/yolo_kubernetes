@@ -8,10 +8,10 @@ const productRoute = require('./routes/api/productRoute');
 
 // Connecting to the Database
 let mongodb_url = 'mongodb://localhost/';
-let dbName = 'yolo_db';
+let dbName = 'yolomy';
 
 // define a url to connect to the database
-const MONGODB_URI = process.env.MONGODB_URL + process.env.DB_NAME || mongodb_url + dbName
+const MONGODB_URI = process.env.MONGODB_URI || mongodb_url + dbName
 mongoose.connect(MONGODB_URI,{useNewUrlParser: true, useUnifiedTopology: true  } )
 let db = mongoose.connection;
 
@@ -44,5 +44,5 @@ app.use('/api/products', productRoute)
 const PORT = process.env.PORT || 8000
 
 app.listen(PORT, ()=>{
-    console.log(`Server listening on port ${PORT} Mongo url: ${MONGODB_URI}`)
+    console.log(`Server listening on port ${PORT}`)
 })
