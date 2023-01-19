@@ -1,19 +1,13 @@
-FROM node:10.19.0-alpine
+# Get the base node image
+FROM node:16-alpine 
 
-# Define working directory
-WORKDIR /src/client
+LABEL maintainer="Jerry Auvagha <jerry.auvagha@student.moringaschool.com>"
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Set the working directory to /client
+WORKDIR /client
+
+# Copy all files to the working directory
+COPY ./ /client
 
 # Install dependencies
 RUN npm install
-
-# Copy rest of the app to the working directory
-COPY . .
-
-# Expose port 3000
-EXPOSE 3000
-
-# Define entry point
-CMD ["npm", "start"]
