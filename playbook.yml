@@ -1,0 +1,69 @@
+---
+- hosts: all
+
+  become: yes
+
+  vars:
+    network: yolo_network
+
+  - name: "Dependency installation"
+    apt: 
+      state: present
+      name: 
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - python3-pip
+        - virtualenv
+        - python3-setuptools
+
+  - name: "Clone repository"
+    git:
+      repo: https://github.com/auvagha-jb/yolo.git
+      dest: /opt/yolo
+      clone: yes
+      update: yes
+  
+  roles:
+    - docker-role
+    - client-role
+    - backend-role
+
+  tasks:
+  - name: "Run MongoDB"
+    docker_container:
+      name: mongodb
+      image: mongo:latest
+      volumes:
+      - yolo_volume:/data/db
+      networks:
+      - name: "{{ network }}"
+      
+  - name: "Run backend"
+    docker_container:
+      name: backend
+      image: "{{ backend_image }}"
+      state: started
+      command: npm start
+      env:
+        MONGODB_URI: mongodb://mongodb:27017/yolomy
+      ports: 
+      - "8000:8000"
+      tty: true
+      networks: 
+      - name: "{{ network }}"
+
+  - name: "Run client"
+    docker_container:
+      name: client
+      image: "{{ client_image_name }}"
+      state: started
+      command: npm start
+      ports: 
+      - "3000:3000"
+      tty: true
+      networks: 
+      - name: "{{ network  }}"
+
+
