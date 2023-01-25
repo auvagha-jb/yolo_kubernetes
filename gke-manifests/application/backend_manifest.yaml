@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: yolo_backend
+  labels:
+    app: api
+    layer: backend
+spec:
+  containers:
+  - image: jerryauvagha/yolo_backend:1.7
+    name: yolo_backend
+    command: ["npm", "start"]
+    stdin: true
+    tty: true
+    env:
+      - name: MONGODB_URI
+        value: "MONGODB_URI=mongodb://mongodb:27017/yolomy"
+    ports:
+    - containerPort: 8000
+      protocol: TCP
