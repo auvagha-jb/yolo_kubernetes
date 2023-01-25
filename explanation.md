@@ -1,37 +1,28 @@
-# Yolo with Ansible
-
-This project contains: 
-- A Vagrantfile for setting up and configuring the virtual machines 
-- An Ansible playbook for setting up and configuring the application in the VMs
+This implementation involves deploying a project to Google Kubernetes Engine (GKE) using the kubectl command-line tool. 
 
 ## Prerequisites
-
-- [Vagrant](https://developer.hashicorp.com/vagrant/docs/installation) 
-- [Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html).
+- [gcloud](https://cloud.google.com/sdk/docs/install-sdk)
+- [kubectl](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl)
+- Additionally you must authenticate and set their Google Cloud project before deploying the manifests as explained [here](https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-access-for-kubectl).
 
 ## Description
 
-### Vagrantfile
-- Sets up the `geerlingguy/ubuntu2004` virtual machines. 
-- Sets the IP and host names.
-- Forwards the ports 8000 and 3000 from the VMs to the host so that the client can communicate with the backend from our browser on localhost port 3000
+The project consists of a cluster with one node running several pods, a persistent volume claim, and two load balancers.
 
-### Ansible playbook
 
-- Roles
+### Pods
+The pods include a `yolo_client` for the frontend, a `yolo_backend` for the backend, and a `mongodb` for the database.
+They are tagged with their respecitve labels for easy identification.
+- yolo_client => layer: frontend
+- yolo_backend => layer: backend
+- mongodb => layer: backend
 
-  - docker-role   =>  Installs docker, creates a custom network and a volume for data persistence.
-                      This spins up the docker, and the database using the `mongo:latest` image.
-  
-  - backend-role  =>  Building the backend container.
-                      This spins up the backend using the backend image to setup and run the backend container. 
-  
-  - client-role   =>  Builds the client container.
-                      This spins up the client using the client image to setup and run the client container.
+### Persistent Volume Claim
+The persistent volume claim ensures that the database is persisted even after the pod is deleted and recreated. 
 
-## Running the application
+### Load Balancers
+-  backendsvc => Exposes port 80 and allows the client to connect to the backend port 8000. Uses the label: `layer: backend` as the selector.
+-  yolo_service => Exposes the client pod to the internet and allows you to connect to the client using its external IP which is `34.105.128.4:3000`. Uses the label: `layer: frontend` as the selector.
 
-In the root folder of the project:  
-Execute `vagrant up` to setup the VMs and provision ansible configuration using `playbook.yml`.
-
-View the application on your browser running on localhost port 3000
+### Service
+- mongodb - A cluster IP type of service that allows the backend pod to peristently communicate with the mongodb pod. Uses the label: `layer: backend` as the selector

@@ -1,23 +1,16 @@
-# Requirements
-Make sure that you have the following installed:
-- [node](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04) 
-- npm 
-- [MongoDB](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) and start the mongodb service with `sudo service mongod start`
+# Yolo Orchestration using GKE
 
-## Navigate to the Client Folder 
- `cd client`
+This project is a Node.js, Express API and MongoDB e-commerce feature project.
+[App Link](http://34.105.128.4:3000/)
 
-## Run the folllowing command to install the dependencies 
- `npm install`
+It can be set up and run in multiple ways, including on Google Kubernetes Engine (GKE), in a virtual machine (VM) using Vagrant and Ansible, and directly on a user's computer using Docker and Docker Compose.
 
-## Run the folllowing to start the app
- `npm start`
+When running on GKE, the user needs to have `gcloud` and `kubectl` installed and must authenticate and set their Google Cloud project before deploying the kubernetes manifests using the kubectl apply -f <manifest-name.yaml> command. Find a detailed explanation on <a href="https://github.com/ElitepathSoftware/yolo-kubernetes/blob/master/explanation.md">explanation.md</a>
 
-## Open a new terminal and run the same commands in the backend folder
- `cd ../backend`
+When running in a VM, the user needs to have Vagrant and Ansible installed, and can set up the virtual machine and provision ansible configuration using the command `vagrant up`.
 
- `npm install`
+When running directly on a user's computer, the user needs to have Docker and Docker Compose installed. The user can build and run the project using the `docker-compose build` and `docker-compose up` commands, and can access the app at <a href="http://localhost:3000">localhost port 3000</a>.
 
- `npm start`
-
- ### Go ahead a nd add a product (note that the price field only takes a numeric input)
+The links to the docker images can be found below:
+- <a href="https://hub.docker.com/repository/docker/jerryauvagha/yolo_client" target="blank">Client Image</a> docker image
+- <a href="https://hub.docker.com/repository/docker/jerryauvagha/yolo_backend" target="blank">Backend Image</a> docker image
