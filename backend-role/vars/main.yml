@@ -1,5 +1,0 @@
----
-# vars file for backend
-
-# The name of the backend image built
-backend_image: jerryauvagha/yolo_backend:1.0
